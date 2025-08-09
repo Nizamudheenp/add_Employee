@@ -1,5 +1,5 @@
+import axios from "axios";
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
-import api from "../api/api";
 
 type EmployeeData = {
   firstName: string;
@@ -17,6 +17,11 @@ type EmployeeData = {
 };
 
 const AddEmployee: React.FC = () => {
+
+  const api = axios.create({
+    baseURL: "http://localhost:5000",
+  });
+
   const [formData, setFormData] = useState<EmployeeData>({
     firstName: "",
     secondName: "",
@@ -72,10 +77,10 @@ const AddEmployee: React.FC = () => {
   const tabs = ["Basic Details", "Personal Details", "Bank Details"];
 
   return (
-    <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-5">
-      <h2 className="text-lg font-semibold mb-4 text-gray-600">Add New Employee</h2>
+    <div className="max-w-8xl mx-auto bg-white shadow-md rounded-lg p-6">
+      <h2 className="text-lg font-semibold text-gray-600">Add New Employee</h2>
 
-      <div className="flex border-b mb-6">
+      <div className="flex border-b mb-3">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -92,7 +97,7 @@ const AddEmployee: React.FC = () => {
 
       {activeTab === "Basic Details" && (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="bg-purple-50 p-4 rounded-md flex  items-center space-x-4">
+          <div className="bg-purple-50 p-3 rounded-md flex  items-center space-x-4">
             {previewImage && (
               <img
                 src={previewImage}
@@ -119,16 +124,25 @@ const AddEmployee: React.FC = () => {
                 >
                   Upload
                 </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPreviewImage("/default-avatar.jpeg");
-                    setFormData({ ...formData, profilePic: null });
-                  }}
-                  className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
-                >
-                  Cancel
-                </button>
+                {formData.profilePic ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPreviewImage("/default-avatar.jpeg");
+                      setFormData({ ...formData, profilePic: null });
+                    }}
+                    className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
+                  >
+                    Cancel
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
+                  >
+                    Cancel
+                  </button>
+                )}
               </div>
             </div>
 
@@ -160,7 +174,7 @@ const AddEmployee: React.FC = () => {
             />
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-2">
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
                 Employee ID
@@ -277,7 +291,7 @@ const AddEmployee: React.FC = () => {
                 className="border p-2 rounded-md w-full"
               />
             </div>
-              <div>
+            <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
                 Confirm Password
               </label>
