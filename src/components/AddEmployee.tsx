@@ -32,7 +32,7 @@ const AddEmployee: React.FC = () => {
     profilePic: null,
   });
 
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string>("/default-avatar.jpeg");
   const [activeTab, setActiveTab] = useState("Basic Details");
 
   const handleChange = (
@@ -72,18 +72,17 @@ const AddEmployee: React.FC = () => {
   const tabs = ["Basic Details", "Personal Details", "Bank Details"];
 
   return (
-    <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Add New Employee</h2>
+    <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-5">
+      <h2 className="text-lg font-semibold mb-4 text-gray-600">Add New Employee</h2>
 
       <div className="flex border-b mb-6">
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 text-sm font-medium ${
-              activeTab === tab
-                ? "border-b-2 border-blue-500 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            className={`px-4 py-2 text-sm font-medium ${activeTab === tab
+              ? "border-b-2 border-blue-500 text-blue-600"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
@@ -93,158 +92,216 @@ const AddEmployee: React.FC = () => {
 
       {activeTab === "Basic Details" && (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="bg-purple-50 p-4 rounded-md flex items-center space-x-4">
+          <div className="bg-purple-50 p-4 rounded-md flex  items-center space-x-4">
             {previewImage && (
               <img
                 src={previewImage}
                 alt="Preview"
-                className="w-16 h-16 rounded-full object-cover"
+                className="w-20 h-20 rounded-full object-cover"
               />
             )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="profilePic"
-            />
-            <label
-              htmlFor="profilePic"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
-            >
-              Upload
-            </label>
-            <button
-              type="button"
-              onClick={() => {
-                setPreviewImage(null);
-                setFormData({ ...formData, profilePic: null });
-              }}
-              className="px-4 py-2 bg-gray-200 rounded-md"
-            >
-              Cancel
-            </button>
+            <div>
+              <h4 className="font-medium text-gray-700">Upload Profile Picture</h4>
+              <p className="text-sm text-gray-500 mb-2">
+                Image should be below 4 mb
+              </p>
+              <div className="flex gap-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="profilePic"
+                />
+                <label
+                  htmlFor="profilePic"
+                  className="px-5  py-1 bg-blue-500 text-white rounded-md cursor-pointer text-sm"
+                >
+                  Upload
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreviewImage("/default-avatar.jpeg");
+                    setFormData({ ...formData, profilePic: null });
+                  }}
+                  className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+
           </div>
 
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full border p-2 rounded-md"
-          />
-          <input
-            type="text"
-            name="secondName"
-            placeholder="Second Name"
-            value={formData.secondName}
-            onChange={handleChange}
-            className="w-full border p-2 rounded-md"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              First Name
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-md"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              Second Name
+            </label>
+            <input
+              type="text"
+              name="secondName"
+              value={formData.secondName}
+              onChange={handleChange}
+              className="w-full border p-2 rounded-md"
+            />
+          </div>
 
           <div className="grid grid-cols-4 gap-4">
-            <input
-              type="text"
-              name="employeeId"
-              placeholder="Employee ID"
-              value={formData.employeeId}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-            <select
-              name="jobType"
-              value={formData.jobType}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            >
-              <option value="">Job Type</option>
-              <option value="full-time">Full Time</option>
-              <option value="part-time">Part Time</option>
-            </select>
-            <select
-              name="designation"
-              value={formData.designation}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            >
-              <option value="">Designation</option>
-              <option value="developer">Developer</option>
-              <option value="designer">Designer</option>
-            </select>
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            >
-              <option value="">Department</option>
-              <option value="it">IT</option>
-              <option value="hr">HR</option>
-            </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Employee ID
+              </label>
+              <input
+                type="text"
+                name="employeeId"
+                value={formData.employeeId}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Job Type
+              </label>
+              <select
+                name="jobType"
+                value={formData.jobType}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              >
+                <option value="">Select</option>
+                <option value="full-time">Full Time</option>
+                <option value="part-time">Part Time</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Designation
+              </label>
+              <select
+                name="designation"
+                value={formData.designation}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              >
+                <option value="">Select</option>
+                <option value="developer">Developer</option>
+                <option value="designer">Designer</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Department
+              </label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              >
+                <option value="">Select</option>
+                <option value="it">IT</option>
+                <option value="hr">HR</option>
+              </select>
+            </div>
           </div>
 
-          {/* User Type & Salary */}
           <div className="grid grid-cols-2 gap-4">
-            <select
-              name="userType"
-              value={formData.userType}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            >
-              <option value="">User Type</option>
-              <option value="admin">Admin</option>
-              <option value="employee">Employee</option>
-            </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                User Type
+              </label>
+              <select
+                name="userType"
+                value={formData.userType}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              >
+                <option value="">Select</option>
+                <option value="admin">Admin</option>
+                <option value="employee">Employee</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Salary
+              </label>
+              <input
+                type="text"
+                name="salary"
+                value={formData.salary}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              Employee Email Address
+            </label>
             <input
-              type="text"
-              name="salary"
-              placeholder="Salary"
-              value={formData.salary}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              className="border p-2 rounded-md"
+              className="w-full border p-2 rounded-md"
             />
           </div>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Employee Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border p-2 rounded-md"
-          />
-
           <div className="grid grid-cols-2 gap-4">
-            <input
-              type="password"
-              name="password"
-              placeholder="Create Password"
-              value={formData.password}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Create Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
+              <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="border p-2 rounded-md w-full"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2">
             <button
               type="button"
-              className="px-4 py-2 bg-gray-200 rounded-md"
+              className="px-5 py-1 bg-gray-200 rounded-md"
               onClick={() => setFormData({ ...formData })}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              className="px-5 py-1 bg-blue-500 text-white rounded-md"
             >
               Continue
             </button>
@@ -252,12 +309,6 @@ const AddEmployee: React.FC = () => {
         </form>
       )}
 
-      {activeTab === "Personal Details" && (
-        <div className="text-gray-500">Personal Details form coming soon...</div>
-      )}
-      {activeTab === "Bank Details" && (
-        <div className="text-gray-500">Bank Details form coming soon...</div>
-      )}
     </div>
   );
 };
