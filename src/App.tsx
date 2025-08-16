@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BasicDetails from "./components/BasicDetails";
 import PersonalDetails from "./components/PersonalDetails";
+import MainLayout from "./components/layout/MainLayout";
 
 const App: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -16,6 +17,7 @@ const App: React.FC = () => {
   };
 
   return (
+    <MainLayout>
     <div className="min-h-screen p-6 bg-gray-50">
       <h2 className="text-lg font-semibold text-gray-700">
         Add New Employee
@@ -40,6 +42,7 @@ const App: React.FC = () => {
       {activeStep === 0 && <BasicDetails onNext={goNext} />}
       {activeStep === 1 && <PersonalDetails onNext={goNext} onBack={goBack} />}
     </div>
+    </MainLayout>
   );
 };
 
