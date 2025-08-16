@@ -145,7 +145,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             >
               Upload
             </label>
-            {formData.profilePic ? (
+            {formData.profilePic && (
               <button
                 type="button"
                 onClick={() => {
@@ -156,14 +156,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
               >
                 Cancel
               </button>
-            ) : (
-              <button
-                type="button"
-                className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
-              >
-                Cancel
-              </button>
-            )}
+            ) }
           </div>
         </div>
       </div>
