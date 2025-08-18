@@ -85,7 +85,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           name="address"
           value={formData.address}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-md px-2 h-[120px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         ></textarea>
         {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
       </div>
@@ -101,7 +101,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             placeholder="+91"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-4  text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-2 h-[80px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
         </div>
@@ -115,7 +115,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             placeholder="+91"
             value={formData.emergencyPhone}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-2 h-[80px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.emergencyPhone && <p className="text-red-500 text-sm">{errors.emergencyPhone}</p>}
         </div>
@@ -130,7 +130,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md text-gray-600 px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select</option>
             <option value="Male">Male</option>
@@ -149,7 +149,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="dob"
             value={formData.dob}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md text-gray-600 px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
         </div>
@@ -163,7 +163,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="nationality"
             value={formData.nationality}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md  px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.nationality && <p className="text-red-500 text-sm">{errors.nationality}</p>}
         </div>
@@ -177,7 +177,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="bloodGroup"
             value={formData.bloodGroup}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md  px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.bloodGroup && <p className="text-red-500 text-sm">{errors.bloodGroup}</p>}
         </div>
@@ -187,14 +187,14 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-1 border bg-gray-100 rounded-md text-sm"
+          className="px-4 py-1 border rounded-md text-sm"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={!allFilled}
-          className={`px-5 py-1 text-white rounded-md text-sm ${allFilled ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"
+          className={`px-5 py-1 text-white rounded-md text-sm ${allFilled ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-400 cursor-not-allowed"
             }`}
         >
           Continue

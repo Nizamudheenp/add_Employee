@@ -3,12 +3,13 @@ import axios from "axios";
 
 type EmployeeData = {
   firstName: string;
-  secondName: string;
+  lastName: string;
   employeeId: string;
   jobType: string;
   designation: string;
   department: string;
   userType: string;
+  repMgrTl: string;
   salary: string;
   email: string;
   password: string;
@@ -27,12 +28,13 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
 
   const [formData, setFormData] = useState<EmployeeData>({
     firstName: "",
-    secondName: "",
+    lastName: "",
     employeeId: "",
     jobType: "",
     designation: "",
     department: "",
     userType: "",
+    repMgrTl: "",
     salary: "",
     email: "",
     password: "",
@@ -62,12 +64,13 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
     const newErrors: Partial<Record<keyof EmployeeData, string>> = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.secondName.trim()) newErrors.secondName = "Second name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Second name is required";
     if (!formData.employeeId.trim()) newErrors.employeeId = "Employee ID is required";
     if (!formData.jobType) newErrors.jobType = "Select job type";
     if (!formData.designation) newErrors.designation = "Select designation";
     if (!formData.department) newErrors.department = "Select department";
     if (!formData.userType) newErrors.userType = "Select user type";
+    if (!formData.repMgrTl) newErrors.repMgrTl = "Select Rep Mgr / TL";
     if (!formData.salary || isNaN(Number(formData.salary))) newErrors.salary = "Enter valid salary";
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Enter valid email";
@@ -83,12 +86,13 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
   const allFieldsFilled = () => {
     return (
       formData.firstName &&
-      formData.secondName &&
+      formData.lastName &&
       formData.employeeId &&
       formData.jobType &&
       formData.designation &&
       formData.department &&
       formData.userType &&
+      formData.repMgrTl &&
       formData.salary &&
       formData.email &&
       formData.password &&
@@ -156,7 +160,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
               >
                 Cancel
               </button>
-            ) }
+            )}
           </div>
         </div>
       </div>
@@ -170,26 +174,26 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
-          className="w-full border p-2 rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md"
         />
         {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-600 mb-1">
-          Second Name
+          Last Name
         </label>
         <input
           type="text"
-          name="secondName"
-          value={formData.secondName}
+          name="LastName"
+          value={formData.lastName}
           onChange={handleChange}
-          className="w-full border p-2 rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md"
         />
-        {errors.secondName && <p className="text-red-500 text-sm">{errors.secondName}</p>}
+        {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
       </div>
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-1">
             Employee ID
@@ -199,7 +203,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="employeeId"
             value={formData.employeeId}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border h-[60px] px-2 rounded-md w-full"
           />
           {errors.employeeId && <p className="text-red-500 text-sm">{errors.employeeId}</p>}
         </div>
@@ -212,7 +216,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="jobType"
             value={formData.jobType}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
             <option value="">Select</option>
             <option value="full-time">Full Time</option>
@@ -229,7 +233,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="designation"
             value={formData.designation}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
             <option value="">Select</option>
             <option value="developer">Developer</option>
@@ -246,7 +250,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="department"
             value={formData.department}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
             <option value="">Select</option>
             <option value="it">IT</option>
@@ -256,7 +260,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-1">
             User Type
@@ -265,7 +269,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="userType"
             value={formData.userType}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
             <option value="">Select</option>
             <option value="admin">Admin</option>
@@ -275,6 +279,25 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-1">
+            Rep Mgr / TL
+          </label>
+          <select
+            name="repMgrTl"
+            value={formData.repMgrTl}
+            onChange={handleChange}
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
+          >
+            <option value="">Select</option>
+            <option value="mgr1">Manager 1</option>
+            <option value="mgr2">Manager 2</option>
+            <option value="tl1">Team Lead 1</option>
+            <option value="tl2">Team Lead 2</option>
+          </select>
+          {errors.repMgrTl && <p className="text-red-500 text-sm">{errors.repMgrTl}</p>}
+        </div>
+
+        <div className="col-span-2">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
             Salary
           </label>
           <input
@@ -282,7 +305,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="salary"
             value={formData.salary}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           />
           {errors.salary && <p className="text-red-500 text-sm">{errors.salary}</p>}
         </div>
@@ -297,7 +320,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full border p-2 rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md"
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
       </div>
@@ -312,7 +335,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border px-2 h-[80px] rounded-md w-full"
           />
           {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         </div>
@@ -325,7 +348,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className="border p-2 rounded-md w-full"
+            className="border h-[80px] px-2 rounded-md w-full"
           />
           {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
         </div>
@@ -334,16 +357,17 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
       <div className="flex justify-end gap-2">
         <button
           type="button"
-          className="px-4 py-1 bg-gray-200 rounded-md"
+          className="px-4 py-1 border rounded-md"
           onClick={() => {
             setFormData({
               firstName: "",
-              secondName: "",
+              lastName: "",
               employeeId: "",
               jobType: "",
               designation: "",
               department: "",
               userType: "",
+              repMgrTl: "",
               salary: "",
               email: "",
               password: "",
@@ -360,7 +384,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         <button
           type="submit"
           disabled={!allFieldsFilled()}
-          className={`px-5 py-1 rounded-md text-white ${allFieldsFilled() ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"
+          className={`px-5 py-1 rounded-md text-white ${allFieldsFilled() ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-400 cursor-not-allowed"
             }`}
         >
           Continue
