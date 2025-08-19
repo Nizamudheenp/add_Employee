@@ -1,32 +1,17 @@
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
-import axios from "axios";
+import useAddEmployeeViewModel from "../../viewmodels/useAddEmployeeViewModel";
+import type { BasicDetailsPayload } from "../../services/employeeService";
 
-type EmployeeData = {
-  firstName: string;
-  lastName: string;
-  employeeId: string;
-  jobType: string;
-  designation: string;
-  department: string;
-  userType: string;
-  repMgrTl: string;
-  salary: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  profilePic?: File | null;
-};
 
 interface Props {
   onNext: () => void;
 }
 
 const BasicDetails: React.FC<Props> = ({ onNext }) => {
-  const api = axios.create({
-    baseURL: "http://localhost:5000",
-  });
 
-  const [formData, setFormData] = useState<EmployeeData>({
+  const { submitBasicDetails } = useAddEmployeeViewModel();
+
+  const [formData, setFormData] = useState<BasicDetailsPayload>({
     firstName: "",
     lastName: "",
     employeeId: "",
@@ -43,7 +28,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
   });
 
   const [previewImage, setPreviewImage] = useState<string>("/default-avatar.jpeg");
-  const [errors, setErrors] = useState<Partial<Record<keyof EmployeeData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof BasicDetailsPayload, string>>>({});
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -61,7 +46,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
   };
 
   const validate = () => {
-    const newErrors: Partial<Record<keyof EmployeeData, string>> = {};
+    const newErrors: Partial<Record<keyof BasicDetailsPayload, string>> = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!formData.lastName.trim()) newErrors.lastName = "Second name is required";
@@ -83,22 +68,8 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const allFieldsFilled = () => {
-    return (
-      formData.firstName &&
-      formData.lastName &&
-      formData.employeeId &&
-      formData.jobType &&
-      formData.designation &&
-      formData.department &&
-      formData.userType &&
-      formData.repMgrTl &&
-      formData.salary &&
-      formData.email &&
-      formData.password &&
-      formData.confirmPassword
-    );
-  };
+  const allFieldsFilled = () =>
+    Object.values(formData).every((val) => val !== "" && val !== null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -111,13 +82,11 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
     });
 
     try {
-      await api.post("/api/employees/basic-details", submitData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await submitBasicDetails(formData);
       onNext();
     } catch (error) {
       console.error(error);
-      alert("Error adding basic Details");
+      alert("Error adding basic details");
     }
   };
 
@@ -185,7 +154,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         </label>
         <input
           type="text"
-          name="LastName"
+          name="lastName"
           value={formData.lastName}
           onChange={handleChange}
           className="w-full border px-2 h-[80px] rounded-md"

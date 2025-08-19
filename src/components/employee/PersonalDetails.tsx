@@ -1,28 +1,19 @@
 import React, { useState } from "react";
-import axios from "axios";
+import useAddEmployeeViewModel from "../../viewmodels/useAddEmployeeViewModel";
+import type { PersonalDetailsPayload } from "../../services/employeeService";
 
 interface PersonalDetailsProps {
   onNext: () => void;
   onBack: () => void;
 }
 
-type PersonalData = {
-  address: string;
-  phone: string;
-  emergencyPhone: string;
-  gender: string;
-  dob: string;
-  nationality: string;
-  bloodGroup: string;
-};
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => {
 
-  const api = axios.create({
-    baseURL: "http://localhost:5000",
-  });
+    const { submitPersonalDetails } = useAddEmployeeViewModel();
 
-  const [formData, setFormData] = useState<PersonalData>({
+
+  const [formData, setFormData] = useState<PersonalDetailsPayload>({
     address: "",
     phone: "",
     emergencyPhone: "",
@@ -32,7 +23,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
     bloodGroup: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof PersonalData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof PersonalDetailsPayload, string>>>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -42,7 +33,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
   };
 
   const validate = () => {
-    const newErrors: Partial<Record<keyof PersonalData, string>> = {};
+    const newErrors: Partial<Record<keyof PersonalDetailsPayload, string>> = {};
     if (!formData.address) newErrors.address = "Address is required";
     if (!formData.phone) newErrors.phone = "Phone number is required";
     if (!formData.emergencyPhone) newErrors.emergencyPhone = "Emergency number is required";
@@ -61,12 +52,11 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
     if (!validate()) return;
 
     try {
-      await api.post("/api/employees/personal-details", formData);
+      await submitPersonalDetails(formData);
       onNext();
     } catch (error) {
       console.error("Error submitting personal details:", error);
       alert("Failed to submit personal details. Please try again.");
-    } finally {
     }
   };
 
