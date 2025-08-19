@@ -26,6 +26,16 @@ export interface PersonalDetailsPayload {
   bloodGroup: string;
 }
 
+export interface BankDetailsPayload {
+  accountNumber: string;
+  confirmAccountNumber: string;
+  ifscCode: string;
+  branchName: string;
+  accountHolderName: string;
+  documents: File | null;
+}
+
+
 export const employeeService = {
   addBasicDetails: async (data: BasicDetailsPayload) => {
     const formData = new FormData();
@@ -41,6 +51,18 @@ export const employeeService = {
 
   addPersonalDetails: async (data: PersonalDetailsPayload) => {
     const res = await api.post("/employees/personal-details", data);
+    return res.data;
+  },
+
+   addBankDetails: async (data: BankDetailsPayload) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value) formData.append(key, value as string | Blob);
+    });
+
+    const res = await api.post("/employees/bank-details", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   },
 };

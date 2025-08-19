@@ -10,8 +10,7 @@ interface PersonalDetailsProps {
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => {
 
-    const { submitPersonalDetails } = useAddEmployeeViewModel();
-
+  const { submitPersonalDetails } = useAddEmployeeViewModel();
 
   const [formData, setFormData] = useState<PersonalDetailsPayload>({
     address: "",
@@ -75,7 +74,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           name="address"
           value={formData.address}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded-md px-2 h-[120px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border text-gray-700 rounded-md px-2 h-[120px]"
         ></textarea>
         {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
       </div>
@@ -91,7 +90,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             placeholder="+91"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-2 h-[80px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-md px-2 h-[80px] text-gray-700"
           />
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
         </div>
@@ -105,7 +104,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             placeholder="+91"
             value={formData.emergencyPhone}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-2 h-[80px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border  rounded-md px-2 h-[80px] text-gray-700"
           />
           {errors.emergencyPhone && <p className="text-red-500 text-sm">{errors.emergencyPhone}</p>}
         </div>
@@ -120,7 +119,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md text-gray-600 px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border  rounded-md text-gray-600 px-2 h-[60px] "
           >
             <option value="">Select</option>
             <option value="Male">Male</option>
@@ -139,7 +138,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="dob"
             value={formData.dob}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md text-gray-600 px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-md text-gray-600 px-2 h-[60px] "
           />
           {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
         </div>
@@ -153,7 +152,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="nationality"
             value={formData.nationality}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md  px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border  rounded-md  px-2 h-[60px] text-gray-700 "
           />
           {errors.nationality && <p className="text-red-500 text-sm">{errors.nationality}</p>}
         </div>
@@ -167,7 +166,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             name="bloodGroup"
             value={formData.bloodGroup}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md  px-2 h-[60px] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border  rounded-md  px-2 h-[60px] text-gray-700"
           />
           {errors.bloodGroup && <p className="text-red-500 text-sm">{errors.bloodGroup}</p>}
         </div>

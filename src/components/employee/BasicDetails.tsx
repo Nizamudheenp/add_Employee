@@ -143,7 +143,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
-          className="w-full border px-2 h-[80px] rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md text-gray-700 "
         />
         {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
       </div>
@@ -157,7 +157,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
-          className="w-full border px-2 h-[80px] rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md text-gray-700"
         />
         {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
       </div>
@@ -172,7 +172,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="employeeId"
             value={formData.employeeId}
             onChange={handleChange}
-            className="border h-[60px] px-2 rounded-md w-full"
+            className="border h-[60px] px-2 rounded-md w-full text-gray-700"
           />
           {errors.employeeId && <p className="text-red-500 text-sm">{errors.employeeId}</p>}
         </div>
@@ -185,7 +185,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="jobType"
             value={formData.jobType}
             onChange={handleChange}
-            className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
+            className="border text-gray-600 h-[60px] px-2 rounded-md w-full text-gray-700"
           >
             <option value="">Select</option>
             <option value="full-time">Full Time</option>
@@ -289,7 +289,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full border px-2 h-[80px] rounded-md"
+          className="w-full border px-2 h-[80px] rounded-md text-gray-700"
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
       </div>
@@ -304,7 +304,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="border px-2 h-[80px] rounded-md w-full"
+            className="border px-2 h-[80px] rounded-md w-full text-gray-700"
           />
           {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         </div>
@@ -317,7 +317,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className="border h-[80px] px-2 rounded-md w-full"
+            className="border h-[80px] px-2 rounded-md w-full text-gray-700"
           />
           {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
         </div>

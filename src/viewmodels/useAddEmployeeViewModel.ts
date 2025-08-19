@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { employeeService, type BasicDetailsPayload, type PersonalDetailsPayload } from "../services/employeeService";
+import { employeeService, type BankDetailsPayload, type BasicDetailsPayload, type PersonalDetailsPayload } from "../services/employeeService";
 
 const useAddEmployeeViewModel = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -22,7 +22,11 @@ const useAddEmployeeViewModel = () => {
     return await employeeService.addPersonalDetails(payload);
   };
 
-  return { steps, activeStep, setActiveStep, goNext, goBack , submitBasicDetails ,submitPersonalDetails };
+   const submitBankDetails = async (payload: BankDetailsPayload) => {
+    return await employeeService.addBankDetails(payload);
+  };
+
+  return { steps, activeStep, setActiveStep, goNext, goBack , submitBasicDetails ,submitPersonalDetails , submitBankDetails };
 };
 
 export default useAddEmployeeViewModel;
