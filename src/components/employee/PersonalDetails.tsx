@@ -1,70 +1,58 @@
-import React, { useState } from "react";
-import useAddEmployeeViewModel from "../../viewmodels/useAddEmployeeViewModel";
+import React, { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { PersonalDetailsPayload } from "../../services/employeeService";
 
 interface PersonalDetailsProps {
-  onNext: () => void;
+  data: PersonalDetailsPayload;
+  update: (patch: Partial<PersonalDetailsPayload>) => void;
   onBack: () => void;
+  onNext: () => void;
 }
 
+type Errors = Partial<Record<keyof PersonalDetailsPayload, string>>;
 
-const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => {
+const PersonalDetails: React.FC<PersonalDetailsProps> = ({ 
+  data,
+  update,
+  onBack,
+  onNext }) => {
 
-  const { submitPersonalDetails } = useAddEmployeeViewModel();
+  const [errors, setErrors] = useState<Errors>({});
 
-  const [formData, setFormData] = useState<PersonalDetailsPayload>({
-    address: "",
-    phone: "",
-    emergencyPhone: "",
-    gender: "",
-    dob: "",
-    nationality: "",
-    bloodGroup: "",
-  });
-
-  const [errors, setErrors] = useState<Partial<Record<keyof PersonalDetailsPayload, string>>>({});
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+ const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    update({ [name]: value } as Partial<PersonalDetailsPayload>);
+    setErrors((prev) => ({ ...prev, [name as keyof PersonalDetailsPayload]: "" }));
   };
 
-  const validate = () => {
-    const newErrors: Partial<Record<keyof PersonalDetailsPayload, string>> = {};
-    if (!formData.address) newErrors.address = "Address is required";
-    if (!formData.phone) newErrors.phone = "Phone number is required";
-    if (!formData.emergencyPhone) newErrors.emergencyPhone = "Emergency number is required";
-    if (!formData.gender) newErrors.gender = "Select gender";
-    if (!formData.dob) newErrors.dob = "Select date of birth";
-    if (!formData.nationality) newErrors.nationality = "Enter nationality";
-    if (!formData.bloodGroup) newErrors.bloodGroup = "Enter blood group";
-
+  const validate = (payload: PersonalDetailsPayload) => {
+    const newErrors: Errors = {};
+    if (!payload.address.trim()) newErrors.address = "Address is required";
+    if (!payload.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!payload.emergencyPhone.trim())
+      newErrors.emergencyPhone = "Emergency number is required";
+    if (!payload.gender) newErrors.gender = "Select gender";
+    if (!payload.dob) newErrors.dob = "Select date of birth";
+    if (!payload.nationality.trim()) newErrors.nationality = "Enter nationality";
+    if (!payload.bloodGroup.trim()) newErrors.bloodGroup = "Enter blood group";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const allFilled = Object.values(formData).every((val) => val.trim() !== "");
+ const allFilled = useMemo(
+    () => Object.values(data).every((v) => v !== "" && v !== null && v !== undefined),
+    [data]
+  );
 
-  const handleSubmit = async () => {
-    if (!validate()) return;
-
-    try {
-      await submitPersonalDetails(formData);
-      onNext();
-    } catch (error) {
-      console.error("Error submitting personal details:", error);
-      alert("Failed to submit personal details. Please try again.");
-    }
+   const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!validate(data)) return;
+    onNext();
   };
 
   return (
-    <form className="space-y-3" onSubmit={(e) => {
-      e.preventDefault();
-      handleSubmit();
-    }}
-    >
+    <form className="space-y-3" onSubmit={handleSubmit}>
       <div>
         <label className="block text-sm font-medium text-gray-600 mb-1">
           Full Address
@@ -72,7 +60,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
         <textarea
           rows={4}
           name="address"
-          value={formData.address}
+          value={data.address}
           onChange={handleChange}
           className="w-full border text-gray-700 rounded-md px-2 h-[120px]"
         ></textarea>
@@ -88,7 +76,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             type="tel"
             name="phone"
             placeholder="+91"
-            value={formData.phone}
+            value={data.phone}
             onChange={handleChange}
             className="w-full border rounded-md px-2 h-[80px] text-gray-700"
           />
@@ -102,7 +90,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
             type="tel"
             name="emergencyPhone"
             placeholder="+91"
-            value={formData.emergencyPhone}
+            value={data.emergencyPhone}
             onChange={handleChange}
             className="w-full border  rounded-md px-2 h-[80px] text-gray-700"
           />
@@ -117,7 +105,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           </label>
           <select
             name="gender"
-            value={formData.gender}
+            value={data.gender}
             onChange={handleChange}
             className="w-full border  rounded-md text-gray-600 px-2 h-[60px] "
           >
@@ -136,7 +124,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           <input
             type="date"
             name="dob"
-            value={formData.dob}
+            value={data.dob}
             onChange={handleChange}
             className="w-full border rounded-md text-gray-600 px-2 h-[60px] "
           />
@@ -150,7 +138,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           <input
             type="text"
             name="nationality"
-            value={formData.nationality}
+            value={data.nationality}
             onChange={handleChange}
             className="w-full border  rounded-md  px-2 h-[60px] text-gray-700 "
           />
@@ -164,7 +152,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ onNext, onBack }) => 
           <input
             type="text"
             name="bloodGroup"
-            value={formData.bloodGroup}
+            value={data.bloodGroup}
             onChange={handleChange}
             className="w-full border  rounded-md  px-2 h-[60px] text-gray-700"
           />

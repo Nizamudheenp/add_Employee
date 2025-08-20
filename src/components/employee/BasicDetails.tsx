@@ -1,98 +1,107 @@
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
-import useAddEmployeeViewModel from "../../viewmodels/useAddEmployeeViewModel";
+import React, { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { BasicDetailsPayload } from "../../services/employeeService";
 
 
-interface Props {
+interface BasicDetailsProps {
+  data: BasicDetailsPayload;
+  update: (patch: Partial<BasicDetailsPayload>) => void;
   onNext: () => void;
 }
 
-const BasicDetails: React.FC<Props> = ({ onNext }) => {
+type Errors = Partial<Record<keyof BasicDetailsPayload, string>>;
 
-  const { submitBasicDetails } = useAddEmployeeViewModel();
+const BasicDetails: React.FC<BasicDetailsProps> = ({ data, update, onNext }) => {
 
-  const [formData, setFormData] = useState<BasicDetailsPayload>({
-    firstName: "",
-    lastName: "",
-    employeeId: "",
-    jobType: "",
-    designation: "",
-    department: "",
-    userType: "",
-    repMgrTl: "",
-    salary: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    profilePic: null,
-  });
+  const [errors, setErrors] = useState<Errors>({});
+  const defaultAvatar = "/default-avatar.jpeg";
+  const [previewImage, setPreviewImage] = useState<string>(defaultAvatar);
 
-  const [previewImage, setPreviewImage] = useState<string>("/default-avatar.jpeg");
-  const [errors, setErrors] = useState<Partial<Record<keyof BasicDetailsPayload, string>>>({});
+    useEffect(() => {
+    if (data.profilePic instanceof File) {
+      const url = URL.createObjectURL(data.profilePic);
+      setPreviewImage(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreviewImage(defaultAvatar);
+    }
+  }, [data.profilePic]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+     const { name, value } = e.target;
+    update({ [name]: value } as Partial<BasicDetailsPayload>);
+    setErrors((prev) => ({ ...prev, [name as keyof BasicDetailsPayload]: "" }));
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setFormData({ ...formData, profilePic: file });
-      setPreviewImage(URL.createObjectURL(file));
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    update({ profilePic: file });
+  };
+
+  const validate = (payload: BasicDetailsPayload) => {
+    const newErrors: Errors = {};
+    if (!payload.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!payload.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!payload.employeeId.trim()) newErrors.employeeId = "Employee ID is required";
+    if (!payload.jobType) newErrors.jobType = "Select job type";
+    if (!payload.designation) newErrors.designation = "Select designation";
+    if (!payload.department) newErrors.department = "Select department";
+    if (!payload.userType) newErrors.userType = "Select user type";
+    if (!payload.repMgrTl) newErrors.repMgrTl = "Select Rep Mgr / TL";
+
+    if (!payload.salary || isNaN(Number(payload.salary))) {
+      newErrors.salary = "Enter valid salary";
     }
-  };
 
-  const validate = () => {
-    const newErrors: Partial<Record<keyof BasicDetailsPayload, string>> = {};
-
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Second name is required";
-    if (!formData.employeeId.trim()) newErrors.employeeId = "Employee ID is required";
-    if (!formData.jobType) newErrors.jobType = "Select job type";
-    if (!formData.designation) newErrors.designation = "Select designation";
-    if (!formData.department) newErrors.department = "Select department";
-    if (!formData.userType) newErrors.userType = "Select user type";
-    if (!formData.repMgrTl) newErrors.repMgrTl = "Select Rep Mgr / TL";
-    if (!formData.salary || isNaN(Number(formData.salary))) newErrors.salary = "Enter valid salary";
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!payload.email || !emailRegex.test(payload.email))
       newErrors.email = "Enter valid email";
-    if (!formData.password || formData.password.length < 6)
+
+    if (!payload.password || payload.password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    if (formData.confirmPassword !== formData.password)
+
+    if (payload.confirmPassword !== payload.password)
       newErrors.confirmPassword = "Passwords do not match";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const allFieldsFilled = () =>
-    Object.values(formData).every((val) => val !== "" && val !== null);
+ const allFieldsFilled = useMemo(() => {
+    const { profilePic, ...rest } = data;
+    // profilePic optional 
+    return Object.values(rest).every((v) => v !== "" && v !== null && v !== undefined);
+  }, [data]);
 
-  const handleSubmit = async (e: FormEvent) => {
+   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!validate(data)) return;
+    onNext();
+  };
 
-    if (!validate()) return;
-
-    const submitData = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) submitData.append(key, value as string | Blob);
+  const clearAll = () => {
+    update({
+      firstName: "",
+      lastName: "",
+      employeeId: "",
+      jobType: "",
+      designation: "",
+      department: "",
+      userType: "",
+      repMgrTl: "",
+      salary: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      profilePic: null,
     });
-
-    try {
-      await submitBasicDetails(formData);
-      onNext();
-    } catch (error) {
-      console.error(error);
-      alert("Error adding basic details");
-    }
+    setErrors({});
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {/* Profile Pic */}
+
       <div className="bg-purple-50 p-3 rounded-md flex items-center space-x-4">
         {previewImage && (
           <img
@@ -118,13 +127,10 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
             >
               Upload
             </label>
-            {formData.profilePic && (
-              <button
+            {data.profilePic && (
+               <button
                 type="button"
-                onClick={() => {
-                  setPreviewImage("/default-avatar.jpeg");
-                  setFormData({ ...formData, profilePic: null });
-                }}
+                onClick={() => update({ profilePic: null })}
                 className="px-5 py-1 border bg-gray-100 rounded-md text-sm"
               >
                 Cancel
@@ -141,7 +147,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         <input
           type="text"
           name="firstName"
-          value={formData.firstName}
+          value={data.firstName}
           onChange={handleChange}
           className="w-full border px-2 h-[80px] rounded-md text-gray-700 "
         />
@@ -155,7 +161,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         <input
           type="text"
           name="lastName"
-          value={formData.lastName}
+          value={data.lastName}
           onChange={handleChange}
           className="w-full border px-2 h-[80px] rounded-md text-gray-700"
         />
@@ -170,7 +176,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           <input
             type="text"
             name="employeeId"
-            value={formData.employeeId}
+            value={data.employeeId}
             onChange={handleChange}
             className="border h-[60px] px-2 rounded-md w-full text-gray-700"
           />
@@ -183,7 +189,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           </label>
           <select
             name="jobType"
-            value={formData.jobType}
+            value={data.jobType}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full text-gray-700"
           >
@@ -200,7 +206,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           </label>
           <select
             name="designation"
-            value={formData.designation}
+            value={data.designation}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
@@ -217,7 +223,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           </label>
           <select
             name="department"
-            value={formData.department}
+            value={data.department}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
@@ -236,7 +242,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           </label>
           <select
             name="userType"
-            value={formData.userType}
+            value={data.userType}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
@@ -252,7 +258,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           </label>
           <select
             name="repMgrTl"
-            value={formData.repMgrTl}
+            value={data.repMgrTl}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           >
@@ -272,7 +278,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           <input
             type="text"
             name="salary"
-            value={formData.salary}
+            value={data.salary}
             onChange={handleChange}
             className="border text-gray-600 h-[60px] px-2 rounded-md w-full"
           />
@@ -287,7 +293,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         <input
           type="email"
           name="email"
-          value={formData.email}
+          value={data.email}
           onChange={handleChange}
           className="w-full border px-2 h-[80px] rounded-md text-gray-700"
         />
@@ -302,7 +308,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           <input
             type="password"
             name="password"
-            value={formData.password}
+            value={data.password}
             onChange={handleChange}
             className="border px-2 h-[80px] rounded-md w-full text-gray-700"
           />
@@ -315,7 +321,7 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
           <input
             type="password"
             name="confirmPassword"
-            value={formData.confirmPassword}
+            value={data.confirmPassword}
             onChange={handleChange}
             className="border h-[80px] px-2 rounded-md w-full text-gray-700"
           />
@@ -327,33 +333,14 @@ const BasicDetails: React.FC<Props> = ({ onNext }) => {
         <button
           type="button"
           className="px-4 py-1 border rounded-md"
-          onClick={() => {
-            setFormData({
-              firstName: "",
-              lastName: "",
-              employeeId: "",
-              jobType: "",
-              designation: "",
-              department: "",
-              userType: "",
-              repMgrTl: "",
-              salary: "",
-              email: "",
-              password: "",
-              confirmPassword: "",
-              profilePic: null,
-            });
-            setPreviewImage("/default-avatar.jpeg");
-            setErrors({});
-          }}
-
+          onClick={clearAll}
         >
           Cancel
         </button>
         <button
           type="submit"
-          disabled={!allFieldsFilled()}
-          className={`px-5 py-1 rounded-md text-white ${allFieldsFilled() ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-400 cursor-not-allowed"
+          disabled={!allFieldsFilled}
+          className={`px-5 py-1 rounded-md text-white ${allFieldsFilled ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-400 cursor-not-allowed"
             }`}
         >
           Continue

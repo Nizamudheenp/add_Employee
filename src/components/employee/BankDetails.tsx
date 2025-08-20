@@ -1,69 +1,71 @@
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
-import useAddEmployeeViewModel from "../../viewmodels/useAddEmployeeViewModel";
+import React, { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { BankDetailsPayload } from "../../services/employeeService";
 
 interface BankDetailsProps {
+    data: BankDetailsPayload;
+    update: (patch: Partial<BankDetailsPayload>) => void;
     onBack: () => void;
-    onSubmitSuccess: () => void;
+    onSubmit: () => Promise<void>; 
 }
 
-const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) => {
-    const { submitBankDetails } = useAddEmployeeViewModel();
+type Errors = Partial<Record<keyof BankDetailsPayload, string>>;
 
-    const [formData, setFormData] = useState<BankDetailsPayload>({
-        accountNumber: "",
-        confirmAccountNumber: "",
-        ifscCode: "",
-        branchName: "",
-        accountHolderName: "",
-        documents: null,
-    });
+const BankDetails: React.FC<BankDetailsProps> = ({ data, update, onBack, onSubmit }) => {
 
-    const [errors, setErrors] = useState<Partial<Record<keyof BankDetailsPayload, string>>>({});
+    const [errors, setErrors] = useState<Errors>({});
+    const [submitting, setSubmitting] = useState(false);
 
-    const handleChange = (
-        e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        setErrors({ ...errors, [e.target.name]: "" });
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        update({ [name]: value } as Partial<BankDetailsPayload>);
+        setErrors((prev) => ({ ...prev, [name as keyof BankDetailsPayload]: "" }));
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFormData({ ...formData, documents: e.target.files[0] });
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            update({ documents: [...(data.documents || []), ...newFiles] });
+            setErrors((prev) => ({ ...prev, documents: "" }));
         }
     };
 
-    const validate = () => {
-        const newErrors: Partial<Record<keyof BankDetailsPayload, string>> = {};
-        if (!formData.accountNumber) newErrors.accountNumber = "Account number is required";
-        if (formData.accountNumber !== formData.confirmAccountNumber)
-            newErrors.confirmAccountNumber = "Account numbers do not match";
-        if (!formData.ifscCode) newErrors.ifscCode = "IFSC code is required";
-        if (!formData.accountHolderName) newErrors.accountHolderName = "Account holder name required";
-        if (!formData.documents) newErrors.documents = "Please attach required document";
+    const handleRemoveFile = (index: number) => {
+        const updated = (data.documents || []).filter((_, i) => i !== index);
+        update({ documents: updated });
+    };
 
+    const validate = (payload: BankDetailsPayload) => {
+        const newErrors: Errors = {};
+        if (!payload.accountNumber) newErrors.accountNumber = "Account number is required";
+        if (payload.accountNumber !== payload.confirmAccountNumber)
+            newErrors.confirmAccountNumber = "Account numbers do not match";
+        if (!payload.ifscCode) newErrors.ifscCode = "IFSC code is required";
+        if (!payload.accountHolderName) newErrors.accountHolderName = "Account holder name required";
+        if (!payload.documents || payload.documents.length === 0) newErrors.documents = "Please attach required document";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const allFilled =
-        formData.accountNumber &&
-        formData.confirmAccountNumber &&
-        formData.ifscCode &&
-        formData.branchName &&
-        formData.accountHolderName &&
-        formData.documents;
+    const allFilled = useMemo(() => {
+        return Boolean(
+            data.accountNumber &&
+            data.confirmAccountNumber &&
+            data.ifscCode &&
+            data.branchName &&
+            data.accountHolderName &&
+            data.documents.length > 0
+        );
+    }, [data]);
+
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!validate()) return;
+        if (!validate(data)) return;
         try {
-            await submitBankDetails(formData);
-            onSubmitSuccess();
-        } catch (error) {
-            console.error("Error submitting bank details:", error);
-            alert("Failed to submit bank details. Please try again.");
+            setSubmitting(true);
+            await onSubmit();
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -74,7 +76,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                 <input
                     type="text"
                     name="accountNumber"
-                    value={formData.accountNumber}
+                    value={data.accountNumber}
                     onChange={handleChange}
                     className="w-full border rounded-md px-2 h-[80px] text-gray-700"
                 />
@@ -86,7 +88,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                 <input
                     type="text"
                     name="confirmAccountNumber"
-                    value={formData.confirmAccountNumber}
+                    value={data.confirmAccountNumber}
                     onChange={handleChange}
                     className="w-full border rounded-md px-2 h-[80px] text-gray-700"
                 />
@@ -101,7 +103,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                     <input
                         type="text"
                         name="ifscCode"
-                        value={formData.ifscCode}
+                        value={data.ifscCode}
                         onChange={handleChange}
                         className="w-full border  rounded-md px-2 h-[80px] text-gray-700"
                     />
@@ -114,7 +116,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                         type="text"
                         name="branchName"
                         placeholder="auto fill"
-                        value={formData.branchName}
+                        value={data.branchName}
                         onChange={handleChange}
                         className="w-full border rounded-md px-2 h-[80px] text-gray-700"
                     />
@@ -125,7 +127,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                     <input
                         type="text"
                         name="accountHolderName"
-                        value={formData.accountHolderName}
+                        value={data.accountHolderName}
                         onChange={handleChange}
                         className="w-full border rounded-md px-2 h-[80px] text-gray-700"
                     />
@@ -143,6 +145,7 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                     <input
                         type="file"
                         accept="image/*,.pdf"
+                        multiple
                         onChange={handleFileChange}
                         className="text-gray-700"
                     />
@@ -151,6 +154,23 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                     * Aadhaar, Bank Passbook or Cheque
                 </p>
                 {errors.documents && <p className="text-red-500 text-sm">{errors.documents}</p>}
+
+                {data.documents && data.documents.length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                        {data.documents.map((file, idx) => (
+                            <li key={idx} className="flex justify-between items-center text-sm bg-gray-100 px-2 py-1 rounded">
+                                <span>{file.name}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveFile(idx)}
+                                    className="text-red-500 hover:text-red-700"
+                                >
+                                    ✕
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
 
             <div className="flex justify-end gap-2">
@@ -163,13 +183,13 @@ const BankDetails: React.FC<BankDetailsProps> = ({ onBack, onSubmitSuccess }) =>
                 </button>
                 <button
                     type="submit"
-                    disabled={!allFilled}
+                    disabled={!allFilled || submitting}
                     className={`px-5 py-1 text-white rounded-md text-sm ${allFilled
-                            ? "bg-blue-500 hover:bg-blue-600"
-                            : "bg-blue-400 cursor-not-allowed"
+                        ? "bg-blue-500 hover:bg-blue-600"
+                        : "bg-blue-400 cursor-not-allowed"
                         }`}
                 >
-                    Add Employee
+                    {submitting ? "Submitting..." : "Add Employee"}
                 </button>
             </div>
         </form>

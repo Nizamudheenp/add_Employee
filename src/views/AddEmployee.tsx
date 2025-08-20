@@ -5,7 +5,18 @@ import useAddEmployeeViewModel from "../viewmodels/useAddEmployeeViewModel";
 import BankDetails from "../components/employee/BankDetails";
 
 const AddEmployee: React.FC = () => {
-  const { steps, activeStep, setActiveStep, goNext, goBack } = useAddEmployeeViewModel();
+  const {
+    steps,
+    activeStep,
+    setActiveStep,
+    goNext,
+    goBack,
+    formData,
+    updateBasic,
+    updatePersonal,
+    updateBank,
+    submitAll,
+  } = useAddEmployeeViewModel();
 
   return (
     <div className="min-h-screen p-6 bg-gray-50">
@@ -20,8 +31,8 @@ const AddEmployee: React.FC = () => {
             key={step}
             onClick={() => setActiveStep(index)}
             className={`px-4 py-2 text-sm font-medium transition-colors ${activeStep === index
-                ? "border-b-2 border-blue-500 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
+              ? "border-b-2 border-blue-500 text-blue-600"
+              : "text-gray-500 hover:text-gray-700"
               }`}
           >
             {step}
@@ -30,9 +41,36 @@ const AddEmployee: React.FC = () => {
       </div>
 
       {/* Step Components */}
-      {activeStep === 0 && <BasicDetails onNext={goNext} />}
-      {activeStep === 1 && <PersonalDetails onNext={goNext} onBack={goBack} />}
-      {activeStep === 2 && (<BankDetails onBack={goBack} onSubmitSuccess={() => alert("Employee Added Successfully")} />
+      {activeStep === 0 && (
+        <BasicDetails
+          data={formData.basic}
+          update={updateBasic}
+          onNext={goNext}
+        />
+      )}
+      {activeStep === 1 && (
+        <PersonalDetails
+          data={formData.personal}
+          update={updatePersonal}
+          onBack={goBack}
+          onNext={goNext}
+        />
+      )}
+      {activeStep === 2 && (
+        <BankDetails
+          data={formData.bank}
+          update={updateBank}
+          onBack={goBack}
+          onSubmit={async () => {
+            try {
+              await submitAll();
+              alert("Employee Added Successfully");
+            } catch (err) {
+              console.error(err);
+              alert("Failed to add employee. Please try again.");
+            }
+          }}
+        />
       )}
     </div>
   );

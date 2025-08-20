@@ -32,35 +32,43 @@ export interface BankDetailsPayload {
   ifscCode: string;
   branchName: string;
   accountHolderName: string;
-  documents: File | null;
+  documents: File[]
 }
 
-
 export const employeeService = {
-  addBasicDetails: async (data: BasicDetailsPayload) => {
+  addEmployee: async (data: {
+    basic: BasicDetailsPayload;
+    personal: PersonalDetailsPayload;
+    bank: BankDetailsPayload;
+  }) => {
     const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value) formData.append(key, value as string | Blob);
+
+    // Basic
+    Object.entries(data.basic).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        formData.append(k, v as any);
+      }
     });
 
-    const res = await api.post("/employees/basic-details", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return res.data;
-  },
-
-  addPersonalDetails: async (data: PersonalDetailsPayload) => {
-    const res = await api.post("/employees/personal-details", data);
-    return res.data;
-  },
-
-   addBankDetails: async (data: BankDetailsPayload) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value) formData.append(key, value as string | Blob);
+    // Personal
+    Object.entries(data.personal).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        formData.append(k, v as any);
+      }
     });
 
-    const res = await api.post("/employees/bank-details", formData, {
+    // Bank
+    Object.entries(data.bank).forEach(([k, v]) => {
+      if (k === "documents" && Array.isArray(v)) {
+        v.forEach((file) => {
+          formData.append("documents", file); 
+        });
+      } else if (v !== undefined && v !== null && v !== "") {
+        formData.append(k, v as any);
+      }
+    });
+
+    const res = await api.post("/employees", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return res.data;
