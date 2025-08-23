@@ -1,3 +1,6 @@
+import type { LeaveSummary } from "../components/employeeDashboard/LeavesDetails";
+import type { DashStats } from "../components/employeeDashboard/StatsCards";
+import type { Employee } from "../types/employee";
 import api from "./api";
 
 export interface BasicDetailsPayload {
@@ -61,7 +64,7 @@ export const employeeService = {
     Object.entries(data.bank).forEach(([k, v]) => {
       if (k === "documents" && Array.isArray(v)) {
         v.forEach((file) => {
-          formData.append("documents", file); 
+          formData.append("documents", file);
         });
       } else if (v !== undefined && v !== null && v !== "") {
         formData.append(k, v as any);
@@ -73,4 +76,23 @@ export const employeeService = {
     });
     return res.data;
   },
+
+  async getEmployeeById(id: string): Promise<Employee> {
+    const res = await api.get(`/employees/${id}`);
+    return res.data as Employee;
+  },
+
+
+  async getEmployeeLeaves(id: string): Promise<LeaveSummary> {
+    const res = await api.get(`/employees/${id}/leaves`);
+    return res.data as LeaveSummary;
+  },
+
+
+  async getEmployeeStats(id: string): Promise<DashStats> {
+    const res = await api.get(`/employees/${id}/stats`);
+    return res.data as DashStats;
+  },
+
+
 };

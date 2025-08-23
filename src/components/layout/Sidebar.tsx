@@ -1,11 +1,11 @@
 import React from 'react';
-import logo from '../../assets/images/icons/logo.svg';
-import overview from '../../assets/images/icons/overview.svg';
-import attendance from '../../assets/images/icons/attendancesammery.svg';
-import leave from '../../assets/images/icons/leaverequest.svg';
-import task from '../../assets/images/icons/tasktracker.svg';
-import productivity from '../../assets/images/icons/prodectivityandstatus.svg';
-import quick from '../../assets/images/icons/quickactionpanal.svg';
+import logo from '../../assets/icons/logo.svg';
+import overview from '../../assets/icons/overview.svg';
+import attendance from '../../assets/icons/attendancesammery.svg';
+import leave from '../../assets/icons/leaverequest.svg';
+import task from '../../assets/icons/tasktracker.svg';
+import productivity from '../../assets/icons/prodectivityandstatus.svg';
+import quick from '../../assets/icons/quickactionpanal.svg';
 
 interface SidebarItem {
   id: string;
@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedItem, onItemClick }) => {
   ];
 
   return (
-   <div className="w-[250px] md:w-[300px] lg:w-[300px] min-h-screen bg-white border-r border-gray-200 flex flex-col">
+    <div className="h-screen bg-white border-r border-gray-200 flex flex-col w-[19.6vw] max-w-[377px] min-w-[220px]">
 
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-5">
@@ -56,12 +56,12 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedItem, onItemClick }) => {
               }`}
             >
              <img
-  src={item.icon}
-  alt={item.label}
-  className={`w-[24px] h-[24px] transition-all duration-200 ${
-    isActive ? 'filter-blue' : ''
-  }`}
-/>
+                src={item.icon}
+                alt={item.label}
+                className={`w-[24px] h-[24px] transition-all duration-200 ${
+                  isActive ? 'filter-blue' : ''
+                }`}
+              />
               <span
                 className={`text-sm font-medium font-['Poppins'] ${
                   isActive ? 'text-ziyablue' : 'text-gray-700'
