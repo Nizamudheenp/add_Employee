@@ -1,5 +1,4 @@
-import type { LeaveSummary } from "../components/employeeDashboard/LeavesDetails";
-import type { DashStats } from "../components/employeeDashboard/StatsCards";
+import type { DashStats, LeaveSummary } from "../types/dashboard";
 import type { Employee } from "../types/employee";
 import api from "./api";
 

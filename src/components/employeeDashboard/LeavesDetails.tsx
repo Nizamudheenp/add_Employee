@@ -1,60 +1,40 @@
 import React from "react";
+import type { LeaveSummary } from "../../types/dashboard";
 
-
-export interface LeaveSummary {
-    totalAllowed: number;
-    taken: number;
-    remaining: number;
-    absentDays: number;
-    upcoming?: { date: string; type: string }[];
-}
-
-
-const StatRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
-    <div className="flex items-center justify-between py-2">
-        <span className="text-gray-600 text-sm">{label}</span>
-        <span className="font-semibold text-gray-900">{value}</span>
-    </div>
+const StatBox: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
+  <div className="flex flex-col items-center justify-center p-3 bg-white rounded-xl shadow">
+    <span className="text-lg font-semibold text-gray-900">{value}</span>
+    <span className="text-xs text-gray-500">{label}</span>
+  </div>
 );
 
-
 const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) => {
-    return (
-        <div className="bg-white rounded-2xl shadow p-6">
-            <h3 className="text-base font-semibold text-gray-900">Leaves Details</h3>
-            <p className="text-xs text-gray-500 mb-4">Overview of your leave balance</p>
+  return (
+    <div className="bg-white rounded-2xl shadow p-6 h-full flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-base font-semibold text-gray-900">Leaves Details</h3>
+        <span className="px-2 py-0.5 bg-gray-100 rounded text-xs font-medium text-gray-600">
+          2025
+        </span>
+      </div>
 
+      {/* Stats grid */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <StatBox label="Total Leaves" value={leaves?.totalAllowed ?? "—"} />
+        <StatBox label="Taken" value={leaves?.taken ?? "—"} />
+        <StatBox label="Absent" value={leaves?.absentDays ?? "—"} />
+        <StatBox label="Request" value={leaves?.requests ?? "—"} />
+        <StatBox label="Worked Days" value={leaves?.workedDays ?? "—"} />
+        <StatBox label="Loss of Pay" value={leaves?.lossOfPay ?? "—"} />
+      </div>
 
-            <div className="rounded-2xl border border-gray-100 p-4 bg-gray-50">
-                <StatRow label="Total Allowed" value={leaves?.totalAllowed ?? "—"} />
-                <div className="h-px bg-gray-100" />
-                <StatRow label="Taken" value={leaves?.taken ?? "—"} />
-                <div className="h-px bg-gray-100" />
-                <StatRow label="Remaining" value={leaves?.remaining ?? "—"} />
-                <div className="h-px bg-gray-100" />
-                <StatRow label="Absents" value={leaves?.absentDays ?? "—"} />
-            </div>
-
-
-            <div className="mt-4">
-                <h4 className="text-sm font-semibold text-gray-800 mb-2">Upcoming</h4>
-                <ul className="space-y-2">
-                    {(leaves?.upcoming ?? []).slice(0, 3).map((u, idx) => (
-                        <li key={idx} className="flex items-center justify-between text-sm bg-gray-50 border border-gray-100 rounded-xl px-3 py-2">
-                            <span className="text-gray-700">{u.type}</span>
-                            <span className="text-gray-500">{u.date}</span>
-                        </li>
-                    ))}
-                    {(!leaves?.upcoming || leaves.upcoming.length === 0) && (
-                        <li className="text-sm text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-xl px-3 py-4 text-center">
-                            No upcoming leaves
-                        </li>
-                    )}
-                </ul>
-            </div>
-        </div>
-    );
+      {/* Footer */}
+      <button className="mt-auto px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
+        Approve Leave
+      </button>
+    </div>
+  );
 };
-
 
 export default LeavesDetails;
