@@ -52,9 +52,8 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ employeeId }) => 
 
 
     return (
-        <div className="min-h-screen p-6 bg-gray-50 space-y-6">
+        <div className="min-h-screen space-y-6">
             <EmployeeProfileCard employee={employee} />
-
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div className="lg:col-span-1">
