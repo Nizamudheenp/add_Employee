@@ -22,7 +22,7 @@ const WorkHoursTimeline: React.FC<Props> = ({ series }) => {
                                         "text-gray-900 font-semibold"
                         }>
                             {s.value}
-                        </p>
+                        </p>    
                     </div>
                 ))}
             </div>
