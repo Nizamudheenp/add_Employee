@@ -4,7 +4,7 @@ import type { LeaveSummary } from "../../types/dashboard";
 const StatBox: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
   <div className="flex flex-col items-left justify-center p-3 bg-white">
     <span className="text-xs text-gray-500">{label}</span>
-    <span className="text-lg font-semibold text-blue-400">{value}</span>
+    <span className="text-lg font-semibold text-[#00A0E3]">{value}</span>
   </div>
 );
 
@@ -18,7 +18,7 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
           2025
         </span>
       </div>
-      <hr className="border-blue-300" />
+      <hr className="border-[#00A0E3]" />
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-3 mt-1 mb-4">
@@ -32,7 +32,7 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
 
       {/* Footer */}
       <button
-        className="w-[191px] h-[42px] border m-auto border-blue-300 rounded-[10px] text-sm font-medium text-blue-400 hover:border-blue-400 transition"
+        className="w-[191px] h-[42px] border m-auto border-[#00A0E3] rounded-[10px] text-sm font-medium text-[#00A0E3] hover:border-[#00A0F3] transition"
       >
         Approve Leave
       </button>

@@ -1,14 +1,13 @@
-// src/types/dashboard.ts
 export interface TimelineSegment {
-  label: string; // "Total Working hours", "Productive Hours", etc.
-  value: string; // "12h 36m"
+  label: string; 
+  value: string; 
 }
 
 export interface DashStats {
-  todayHours: string;     // "5/7hrs"
-  weekHours: string;      // "35/42hrs"
-  monthHours: string;     // "153/182hrs"
-  overtimeHours: string;  // "25/182hrs"
+  todayHours: number;     
+  weekHours: number;    
+  monthHours: number;     
+  overtimeHours: number;  
   timeline: TimelineSegment[];
 }
 
