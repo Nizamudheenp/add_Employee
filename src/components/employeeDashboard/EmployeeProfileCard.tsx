@@ -14,7 +14,6 @@ const Row: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, valu
 const EmployeeProfileCard: React.FC<{ employee: Employee }> = ({ employee }) => {
   return (
     <div className="bg-white rounded-lg shadow p-5">
-      {/* Top section */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* Avatar */}
         <div>
@@ -50,9 +49,7 @@ const EmployeeProfileCard: React.FC<{ employee: Employee }> = ({ employee }) => 
 
         </div>
 
-        {/* Info */}
         <div className="ml-4">
-          {/* Identity */}
           <div className="mb-4">
             <h2 className="text-lg font-medium text-gray-700 flex mb-1 items-center ">
               {employee.basic.firstName} {employee.basic.lastName}

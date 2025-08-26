@@ -4,6 +4,7 @@ import LeavesDetails from "../components/employeeDashboard/LeavesDetails";
 import StatsCards from "../components/employeeDashboard/StatsCards";
 import WorkHoursTimeline from "../components/employeeDashboard/WorkHoursTimeline";
 import EmployeeProfileCard from "../components/employeeDashboard/EmployeeProfileCard";
+import DashboardHeader from "../components/employeeDashboard/DashboardHeader";
 
 
 interface EmployeeDashboardProps {
@@ -53,6 +54,9 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ employeeId }) => 
 
     return (
         <div className="min-h-screen space-y-12">
+            <div>
+                <DashboardHeader />
+            </div>
             <EmployeeProfileCard employee={employee} />
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">

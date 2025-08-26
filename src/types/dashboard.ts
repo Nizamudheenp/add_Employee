@@ -1,6 +1,6 @@
 export interface TimelineSegment {
   label: string; 
-  value: string; 
+  value: number; 
 }
 
 export interface DashStats {

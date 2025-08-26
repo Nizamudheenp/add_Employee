@@ -20,7 +20,7 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
       </div>
       <hr className="border-[#00A0E3]" />
 
-      {/* Stats grid */}
+      {/* Stats  */}
       <div className="grid grid-cols-2 gap-3 mt-1 mb-4">
         <StatBox label="Total Leaves" value={leaves?.totalAllowed ?? "—"} />
         <StatBox label="Taken" value={leaves?.taken ?? "—"} />
@@ -30,7 +30,6 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
         <StatBox label="Loss of Pay" value={leaves?.lossOfPay ?? "—"} />
       </div>
 
-      {/* Footer */}
       <button
         className="w-[191px] h-[42px] border m-auto border-[#00A0E3] rounded-[10px] text-sm font-medium text-[#00A0E3] hover:border-[#00A0F3] transition"
       >

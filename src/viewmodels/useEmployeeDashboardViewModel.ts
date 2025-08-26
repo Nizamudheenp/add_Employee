@@ -25,12 +25,7 @@ export const useEmployeeDashboardViewModel = (employeeId: string) => {
                 if (!mounted) return;
                 const statsWithTimeline: DashStats = {
                     ...st,
-                    timeline: st.timeline ?? [
-                        { label: "Total Working hours", value: "12h 36m" },
-                        { label: "Productive Hours", value: "08h 30m" },
-                        { label: "Break hours", value: "01h 15m" },
-                        { label: "Overtime hours", value: "04h 20m" },
-                    ],
+                    timeline: st.timeline ?? [],
                 };
                 setEmployee(emp);
                 setLeaves(lvs);
