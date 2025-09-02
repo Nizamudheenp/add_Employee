@@ -21,7 +21,7 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
       <hr className="border-[#00A0E3]" />
 
       {/* Stats  */}
-      <div className="grid grid-cols-2 gap-3 mt-1 mb-4">
+      <div className="grid grid-cols-2 gap-1 mt-1 mb-4">
         <StatBox label="Total Leaves" value={leaves?.totalAllowed ?? "—"} />
         <StatBox label="Taken" value={leaves?.taken ?? "—"} />
         <StatBox label="Absent" value={leaves?.absentDays ?? "—"} />
@@ -31,11 +31,11 @@ const LeavesDetails: React.FC<{ leaves: LeaveSummary | null }> = ({ leaves }) =>
       </div>
 
       <button
-        className="w-[191px] h-[42px] border m-auto border-[#00A0E3] rounded-[10px] text-sm font-medium text-[#00A0E3] hover:border-[#00A0F3] transition"
+        className="w-[140px] h-[30px] border m-auto border-[#00A0E3] rounded-[8px] 
+             text-sm font-medium text-[#00A0E3] hover:border-[#00A0F3] transition"
       >
         Approve Leave
       </button>
-
     </div>
   );
 };
