@@ -43,7 +43,7 @@ const ProductioStatus: React.FC = () => {
           value={leaves.overall}
         />
 
-        <div className="flex justify-between items-center px-4 mb-2 text-sm text-gray-600">
+        <div className="flex justify-between items-center px-4 mb-8 text-sm text-gray-600">
           <div className="flex items-center">
             Overall Leaves
             <Users2 className="w-4 h-4 text-orange-500 ml-2" />
