@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { employeeService } from "../services/employeeService";
+// import { employeeService } from "../services/employeeService";
 import type { Employee } from "../types/employee";
 import type { DashStats, LeaveSummary } from "../types/dashboard";
 
+import { sampleEmployee, sampleLeaves, sampleStats } from "../services/sampleData";
 
 export const useEmployeeDashboardViewModel = (employeeId: string) => {
     const [employee, setEmployee] = useState<Employee | null>(null);
@@ -17,19 +18,32 @@ export const useEmployeeDashboardViewModel = (employeeId: string) => {
         (async () => {
             try {
                 setLoading(true);
-                const [emp, lvs, st] = await Promise.all([
-                    employeeService.getEmployeeById(employeeId),
-                    employeeService.getEmployeeLeaves(employeeId),
-                    employeeService.getEmployeeStats(employeeId),
-                ]);
+
+        // api based
+
+                // const [emp, lvs, st] = await Promise.all([
+                //     employeeService.getEmployeeById(employeeId),
+                //     employeeService.getEmployeeLeaves(employeeId),
+                //     employeeService.getEmployeeStats(employeeId),
+                // ]);
+                // if (!mounted) return;
+                // const statsWithTimeline: DashStats = {
+                //     ...st,
+                //     timeline: st.timeline ?? [],
+                // };
+                // setEmployee(emp);
+                // setLeaves(lvs);
+                // setStats(statsWithTimeline);
+
+        // sample array based
                 if (!mounted) return;
-                const statsWithTimeline: DashStats = {
-                    ...st,
-                    timeline: st.timeline ?? [],
-                };
-                setEmployee(emp);
-                setLeaves(lvs);
-                setStats(statsWithTimeline);
+
+                setEmployee(sampleEmployee);
+                setLeaves(sampleLeaves);
+                setStats(sampleStats);
+                
+                setLoading(false);
+
             } catch (e: any) {
                 if (!mounted) return;
                 setError(e?.message ?? "Failed to load employee dashboard");
